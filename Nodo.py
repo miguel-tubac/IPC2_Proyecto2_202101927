@@ -1,6 +1,6 @@
 
-class nodo:
-    def __init__(self,estudiante=None,siguiente=None,anterior=None): 
-        self.estudiante=estudiante
-        self.siguiente=siguiente
-        self.anterior=anterior
+class Nodo:
+    def __init__(self, datos=None, siguiente=None, anterior=None):
+        self.dato = datos
+        self.anterior = anterior
+        self.siguiente = siguiente
