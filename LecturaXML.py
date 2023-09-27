@@ -127,3 +127,11 @@ if __name__ == "__main__":
               "\nsistemaDrones: ", mensaje.dato.sistemaDrones)
         for instruc in mensaje.dato.instrucciones.recorrer():
             print("instruccion - dron: ", instruc.dato.dron," Instrucion: ",instruc.dato.valorInstrucion)
+
+    lista_drones.borrar_todos()
+    #lista_drones = parser.get_lista_drones() # Este se tine que quitar
+    print("--------------------------------------")
+    print("           Drones:    ")
+    for elemento in lista_drones.recorrer():
+        print(elemento.dato.nombre)
+    print("--------------------------------------\n")
