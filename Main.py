@@ -18,6 +18,7 @@ class ScrollText(tk.Frame):
             height=38,
             font=("Courier New", 10),
         )
+        # Con esta linea activo el text area por si deseo despues desactivarlo:
         self.text.pack(side=tk.RIGHT, fill=tk.BOTH, expand=True)
     def insert(self, *args, **kwargs):
         return self.text.insert(*args, **kwargs)
@@ -48,17 +49,17 @@ class Ventana(tk.Tk):
 
         self.menu.add_command(label="Salir", command=self.quit)
 
-        self.menu.add_command(label="a. Inicializacion", command=self.reiniciarSistema)
+        self.menu.add_command(label="a. Inicializar", command=self.reiniciarSistema)
         self.menu.add_command(label="b. Cargar(Archivo)", command=self.open_file)
-        self.menu.add_command(label="c. Generar(Archivo)", command=self.mostrarPrueba)
+        self.menu.add_command(label="c. Generar(Archivo)")
 
-        self.menu.add_cascade(label="d. Gestion(Drones)", menu=self.filemenu)
-        self.filemenu.add_command(label="a. Listado(Drones)")
+        self.menu.add_cascade(label="d. Gestion(Drones) ▼", menu=self.filemenu)
+        self.filemenu.add_command(label="a. Listado(Drones)",command=self.mostrarDronesEnOrdenAlfabetico)
         self.filemenu.add_command(label="b. Agregar(Dron)")
 
         self.menu.add_command(label="e. ListaDrones(Grafica)")
 
-        self.menu.add_cascade(label="f. Gestion(Mensajes)", menu=self.filemenu2)
+        self.menu.add_cascade(label="f. Gestion(Mensajes) ▼", menu=self.filemenu2)
         self.filemenu2.add_command(label="a. Listado(Mensajes)")
         self.filemenu2.add_separator()
         self.filemenu2.add_command(label="i. Seleccionar(Mensaje)")
@@ -76,10 +77,11 @@ class Ventana(tk.Tk):
         # Se muestra la direcion del archivo en la ventana
         self.title(f"Proyecto 2 - IPC2 - {filepath}")
         self.path = filepath
+        self.mostrar_infoIngresoArchivo()
         
 
 
-    def mostrarPrueba(self):
+    def mostrarDronesEnOrdenAlfabetico(self):
         if not self.path:
             # mensaje de error que ya se reinicio el sistema
             self.scroll.delete(1.0,tk.END)
@@ -88,12 +90,14 @@ class Ventana(tk.Tk):
         parser = ConfigParser(self.path)
 
         self.lista_drones = parser.get_lista_drones()
+        self.lista_drones.ordenar_alfabeticamente()
         mostrar = "--------------------------------------\n"
-        mostrar += "           Drones:    \n"
+        mostrar += "    Drones En Orden Alfabetico:    \n"
         for elemento in self.lista_drones.recorrer():
             mostrar += elemento.dato.nombre+"\n"
         mostrar +="--------------------------------------\n"
-
+        
+        mostrar +="--------------------Esto se tinene que quitar------------------\n"
         self.lista_sistemas_drones = parser.get_lista_sistemas_drones()
         mostrar +="     Lista de Sistemas de Drones:  \n"
         for sistema in self.lista_sistemas_drones.recorrer():
@@ -112,6 +116,7 @@ class Ventana(tk.Tk):
                 mostrar += "instruccion - dron: "+ instruc.dato.dron + " Instrucion: " + instruc.dato.valorInstrucion + "\n"
         mostrar +="--------------------------------------"
         self.scroll.insert(tk.END, mostrar)
+        
 
 
     def reiniciarSistema(self):
@@ -120,8 +125,15 @@ class Ventana(tk.Tk):
         self.lista_mensajes.borrar_todos()
 
         self.path = None
-        self.mostrarPrueba()
+        self.mostrarDronesEnOrdenAlfabetico()
+        self.mostrar_infoReinicio()
     
+    # Función para mostrar un mensaje de información
+    def mostrar_infoReinicio(self):
+        messagebox.showinfo("Información", "Sistema Reiniciado con Exito")
+
+    def mostrar_infoIngresoArchivo(self):
+        messagebox.showinfo("Información", "Archivo Ingresado con Exito")
 
 app = Ventana()
 app.mainloop()

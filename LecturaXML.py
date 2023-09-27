@@ -22,7 +22,7 @@ class ConfigParser:
             #Creo una instancia de mi clase drones, para posterior acceder a sus datos
             ndron = Drones(dron_element.text) 
             # Inserto la instancia de la clase que declare ndron
-            drones.insertar(ndron) 
+            drones.insertar(ndron)
         # Devuelvo la instancai de la lista doble para poder recorrela 
         return drones
 
@@ -100,6 +100,7 @@ if __name__ == "__main__":
 
 
     lista_drones = parser.get_lista_drones()
+    lista_drones.ordenar_alfabeticamente()
     print("--------------------------------------")
     print("           Drones:    ")
     for elemento in lista_drones.recorrer():

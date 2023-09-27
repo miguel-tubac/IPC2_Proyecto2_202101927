@@ -24,6 +24,22 @@ class ListaDoble:
     def borrar_todos(self):
         self.primero = None
 
+
+    def ordenar_alfabeticamente(self):
+            if self.primero is None:
+                return
+
+            ordenado = False
+            while not ordenado:
+                ordenado = True
+                actual = self.primero
+                while actual.siguiente is not None:
+                    siguiente = actual.siguiente
+                    if ord(actual.dato.nombre[-1]) > ord(siguiente.dato.nombre[-1]):
+                        actual.dato, siguiente.dato = siguiente.dato, actual.dato
+                        ordenado = False
+                    actual = siguiente
+
     # def eliminar(self,usuario):
     #     actual = self.primero
     #     while actual != None:
