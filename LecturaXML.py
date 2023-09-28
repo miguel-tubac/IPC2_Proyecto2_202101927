@@ -12,17 +12,21 @@ class ConfigParser:
         self.xml_file_path = xml_file_path
         self.tree = ET.parse(xml_file_path)
         self.root = self.tree.getroot()
+        self.contadorDrones = 0
 
     def get_lista_drones(self):
         # Creo la instancia de la listaDoble
-        drones = ListaDoble() 
+        drones = ListaDoble()
         lista_drones = self.root.find('listaDrones')
         # Recorro cada elemento que contenga 'dron'
         for dron_element in lista_drones.findall('dron'):
-            #Creo una instancia de mi clase drones, para posterior acceder a sus datos
-            ndron = Drones(dron_element.text) 
-            # Inserto la instancia de la clase que declare ndron
-            drones.insertar(ndron)
+            # Se establece el limite de drones de 200
+            if self.contadorDrones <= 200:
+                #Creo una instancia de mi clase drones, para posterior acceder a sus datos
+                ndron = Drones(dron_element.text)
+                # Inserto la instancia de la clase que declare ndron
+                drones.insertar(ndron)
+            self.contadorDrones += 1
         # Devuelvo la instancai de la lista doble para poder recorrela 
         return drones
 
@@ -32,36 +36,37 @@ class ConfigParser:
         lista_sistemas_drones = self.root.find('listaSistemasDrones')
         #se recorre en cada elemento del xml para encontrar 'sistemaDrones'
         for sistema_drones_element in lista_sistemas_drones.findall('sistemaDrones'):
-            # se obtinene los datos del xml
-            nombre = sistema_drones_element.get('nombre')
             altura_maxima = sistema_drones_element.find('alturaMaxima').text
-            cantidad_drones = sistema_drones_element.find('cantidadDrones').text
-            # se cra otra instancia de la listadoble en donde se almacenara el dron y la otra listadoble datosAltura
-            contenido = ListaDoble()
-            # recorremos el xml por cada 'contenido'
-            for contenido_element in sistema_drones_element.findall('contenido'):
-                # se almacena el nombre del dron
-                dron = contenido_element.find('dron').text
-                # se cra otra instancia de la listadoble en donde se almacenara las alturas y letras
-                datosAltura = ListaDoble()
-                # Recorro el xml en busca de 'alturas'
-                for altura in contenido_element.find('alturas'):
-                    # obtengo el valor 
-                    alturas = altura.get("valor")
-                    # obtengo la letra que acompana el valor
-                    letras = altura.text
-                    # Creo una instancia de la clase Alturas
-                    ingresoAlturas = Alturas(alturas, letras)
-                    # Almaceno la instancia en la listadoble de datosAltura
-                    datosAltura.insertar(ingresoAlturas)
-                # Creo una instancia de la clase Contenido y en la misma meto una listadoble datosAltura    
-                datoDeDron = Contenido(dron, datosAltura)
-                # La ingreso a la listadoble contenido
-                contenido.insertar(datoDeDron)
-            # Creo una instancia de la clase SistemaDrones, en donde almaceno una listadoble contenido
-            datoDeSistemaDron = SistemaDrones(nombre, altura_maxima, cantidad_drones, contenido)
-            # Inserto la instancia en la lista doble sistemas_drones
-            sistemas_drones.insertar(datoDeSistemaDron)
+            if int(altura_maxima) > 0 and int(altura_maxima) <= 100:    
+                # se obtinene los datos del xml
+                nombre = sistema_drones_element.get('nombre')
+                cantidad_drones = sistema_drones_element.find('cantidadDrones').text
+                # se cra otra instancia de la listadoble en donde se almacenara el dron y la otra listadoble datosAltura
+                contenido = ListaDoble()
+                # recorremos el xml por cada 'contenido'
+                for contenido_element in sistema_drones_element.findall('contenido'):
+                    # se almacena el nombre del dron
+                    dron = contenido_element.find('dron').text
+                    # se cra otra instancia de la listadoble en donde se almacenara las alturas y letras
+                    datosAltura = ListaDoble()
+                    # Recorro el xml en busca de 'alturas'
+                    for altura in contenido_element.find('alturas'):
+                        # obtengo el valor 
+                        alturas = altura.get("valor")
+                        # obtengo la letra que acompana el valor
+                        letras = altura.text
+                        # Creo una instancia de la clase Alturas
+                        ingresoAlturas = Alturas(alturas, letras)
+                        # Almaceno la instancia en la listadoble de datosAltura
+                        datosAltura.insertar(ingresoAlturas)
+                    # Creo una instancia de la clase Contenido y en la misma meto una listadoble datosAltura    
+                    datoDeDron = Contenido(dron, datosAltura)
+                    # La ingreso a la listadoble contenido
+                    contenido.insertar(datoDeDron)
+                # Creo una instancia de la clase SistemaDrones, en donde almaceno una listadoble contenido
+                datoDeSistemaDron = SistemaDrones(nombre, altura_maxima, cantidad_drones, contenido)
+                # Inserto la instancia en la lista doble sistemas_drones
+                sistemas_drones.insertar(datoDeSistemaDron)
         # Devuelvo el sistemas_drones para poder reccorer en la misma
         return sistemas_drones
 
@@ -100,6 +105,7 @@ if __name__ == "__main__":
 
 
     lista_drones = parser.get_lista_drones()
+    lista_drones.eliminar_duplicados()
     lista_drones.ordenar_alfabeticamente()
     print("--------------------------------------")
     print("           Drones:    ")

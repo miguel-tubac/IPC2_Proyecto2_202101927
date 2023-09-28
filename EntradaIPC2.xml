@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <config>
    <listaDrones>
+      <dron>DronA</dron>
       <dron>DronY</dron>
       <dron>DronX</dron>
       <dron>DronW</dron>

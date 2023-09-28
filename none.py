@@ -4,11 +4,11 @@ class ListaDoble:
     def __init__(self):
         self.primero = None
 
-    def insertar(self, nota):
+    def insertar(self, dato):
         if self.primero is None:
-            self.primero = Nodo(datos=nota)
+            self.primero = Nodo(datos=dato)
         else:
-            actual= Nodo(datos=nota, siguiente=self.primero)
+            actual = Nodo(datos=dato, siguiente=self.primero)
             self.primero.anterior = actual
             self.primero = actual
 
@@ -20,23 +20,6 @@ class ListaDoble:
             yield actual
             actual = actual.siguiente
 
-    def borrar_todos(self):
-        self.primero = None
-
-    def ordenar_alfabeticamente(self):
-        if self.primero is None:
-            return
-
-        ordenado = False
-        while not ordenado:
-            ordenado = True
-            actual = self.primero
-            while actual.siguiente is not None:
-                siguiente = actual.siguiente
-                if ord(actual.dato.nombre[-1]) > ord(siguiente.dato.nombre[-1]):
-                    actual.dato, siguiente.dato = siguiente.dato, actual.dato
-                    ordenado = False
-                actual = siguiente
 
     def eliminar_duplicados(self):
         if self.primero is None:
@@ -44,14 +27,14 @@ class ListaDoble:
 
         actual = self.primero
         while actual:
-            dato_actual = actual.dato.nombre
+            dato_actual = actual.dato
             siguiente = actual.siguiente
             anterior = actual.anterior
 
             # Buscar duplicados a partir del nodo siguiente
             duplicado = False
             while siguiente:
-                if siguiente.dato.nombre == dato_actual:
+                if siguiente.dato == dato_actual:
                     duplicado = True
                     siguiente = siguiente.siguiente
                     if siguiente:
@@ -68,5 +51,15 @@ class ListaDoble:
             # Avanzar al siguiente nodo solo si no hubo duplicados
             if not duplicado:
                 actual = actual.siguiente
-        
 
+lista = ListaDoble()
+lista.insertar("DronY")
+lista.insertar("DronW")
+lista.insertar("DronX")
+lista.insertar("DronA")
+lista.insertar("DronW")  # Dato duplicado
+
+lista.eliminar_duplicados()
+
+for nodo in lista.recorrer():
+    print(nodo.dato)
