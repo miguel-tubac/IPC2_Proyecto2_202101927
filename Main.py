@@ -48,7 +48,49 @@ class Ventana(tk.Tk):
         self.scroll = ScrollText(self)
         self.scroll.pack()
 
+        # Almacenar la path
+        self.path = None
+        # Contar las veces de repeticion del boton Listado De Drones
+        self.candtidadDeClicks = 0
 
+        # Validacion de archivos concatenados
+        self.datosConcatenados = False
+
+        #Datos para almacenar y borrar la lista doble enlazada
+        self.lista_drones1 = None
+        self.lista_drones2 = None
+        self.lista_sistemas_drones = None
+        self.lista_mensajes = None
+
+           # Variable para almacenar la referencia al submenú
+        self.sub_menu_var = None
+
+        self.menu = Menu(self)
+        self.config(menu=self.menu)
+        self.filemenu = Menu(self.menu)
+        self.filemenu2 = Menu(self.menu)
+
+        self.menu.add_command(label="Salir", command=self.quit)
+
+        self.menu.add_command(label="a. Inicializar", command=self.reiniciarSistema)
+        self.menu.add_command(label="b. Cargar(Archivo)", command=self.open_file)
+        self.menu.add_command(label="c. Generar(Archivo)")
+
+        self.menu.add_cascade(label="d. Gestion(Drones) ▼", menu=self.filemenu)
+        self.filemenu.add_command(label="a. Listado(Drones)",command=self.mostrarDronesEnOrdenAlfabetico)
+        self.filemenu.add_command(label="b. Agregar(Dron)", command=self.abrir_ventanaIngresarDron)
+
+        self.menu.add_command(label="e. ListaDrones(Grafica)", command=self.verGraficamenteLestadoSistemaDrones)
+
+        self.menu.add_cascade(label="f. Gestion(Mensajes) ▼", menu=self.filemenu2)
+        self.filemenu2.add_command(label="a. Listado(Mensajes)", command=self.listadoMensajes)
+        self.filemenu2.add_separator()
+        # Estos incisos se agregan en la parte inferior ya que son dinamicos:
+        # self.filemenu2.add_command(label="i. Seleccionar(Mensaje) ")
+        # self.filemenu2.add_command(label="ii. Mostrar(sistema)")
+        # self.filemenu2.add_command(label="iii. Grafica(Instruciones)")
+
+        self.menu.add_command(label="g. Ayuda")
 
         # # Crear barras de desplazamiento
         # self.scrollbar_x = Scrollbar(self, orient=tk.HORIZONTAL)
@@ -71,49 +113,6 @@ class Ventana(tk.Tk):
         # # Crear el área de texto en el contenedor
         # self.scroll = ScrollText(container)
         # self.scroll.pack(side=tk.RIGHT, fill=tk.BOTH, expand=True)
-
-
-
-        # Almacenar la path
-        self.path = None
-        # Contar las veces de repeticion del boton Listado De Drones
-        self.candtidadDeClicks = 0
-
-        # Validacion de archivos concatenados
-        self.datosConcatenados = False
-
-        #Datos para almacenar y borrar la lista doble enlazada
-        self.lista_drones1 = None
-        self.lista_drones2 = None
-        self.lista_sistemas_drones = None
-        self.lista_mensajes = None
-
-        self.menu = Menu(self)
-        self.config(menu=self.menu)
-        self.filemenu = Menu(self.menu)
-        self.filemenu2 = Menu(self.menu)
-
-        self.menu.add_command(label="Salir", command=self.quit)
-
-        self.menu.add_command(label="a. Inicializar", command=self.reiniciarSistema)
-        self.menu.add_command(label="b. Cargar(Archivo)", command=self.open_file)
-        self.menu.add_command(label="c. Generar(Archivo)")
-
-        self.menu.add_cascade(label="d. Gestion(Drones) ▼", menu=self.filemenu)
-        self.filemenu.add_command(label="a. Listado(Drones)",command=self.mostrarDronesEnOrdenAlfabetico)
-        self.filemenu.add_command(label="b. Agregar(Dron)", command=self.abrir_ventanaIngresarDron)
-
-        self.menu.add_command(label="e. ListaDrones(Grafica)", command=self.verGraficamenteLestadoSistemaDrones)
-
-        self.menu.add_cascade(label="f. Gestion(Mensajes) ▼", menu=self.filemenu2)
-        self.filemenu2.add_command(label="a. Listado(Mensajes)", command=self.listadoMensajes)
-        self.filemenu2.add_separator()
-        self.filemenu2.add_command(label="i. Seleccionar(Mensaje)")
-        self.filemenu2.add_command(label="ii. Mostrar(sistema)")
-        self.filemenu2.add_command(label="iii. Grafica(Instruciones)")
-
-        self.menu.add_command(label="g. Ayuda")
-
 
 
     def open_file(self):
@@ -172,6 +171,7 @@ class Ventana(tk.Tk):
             # mostrar +="--------------------------------------"
             self.scroll.insert(tk.END, mostrar)
             self.candtidadDeClicks +=1
+            self.crearSubMenuMensajes()
 
         if self.datosConcatenados:
             # Esto es para borrar y dejar limpia el text area 
@@ -205,6 +205,7 @@ class Ventana(tk.Tk):
         # Borramos las dos listas doblemente enlazadas
         self.lista_drones1 = None
         self.lista_drones2 = None
+        self.lista_mensajes = None
         self.lista_sistemas_drones = None
         # Inicializamos la variable que hace que se unan las dos listas enlazadas
         self.datosConcatenados = False
@@ -214,6 +215,8 @@ class Ventana(tk.Tk):
         self.candtidadDeClicks = 0
         #Quita el area de texto
         self.scroll.desactivarTextArea()
+        # Para reiniciar las opciones de selecion de mesajes
+        self.crearSubMenuMensajes()
         # Muestra el mensaje emergente 
         self.mostrar_infoReinicio()
 
@@ -316,6 +319,59 @@ class Ventana(tk.Tk):
             mostrar += "nombre: "+ mensaje.dato.nombre + "\n sistemaDrones: "+ mensaje.dato.sistemaDrones + "\n"
             for instruc in mensaje.dato.instrucciones.recorrer():
                 mostrar += "instruccion - dron: "+ instruc.dato.dron + " Instrucion: " + instruc.dato.valorInstrucion + "\n"
+        
+        # Muestra el texto en el area de texto
+        self.scroll.insert(tk.END, mostrar)
+         
+    # Esta funcion crea los sub menus de los mensajes 
+    def crearSubMenuMensajes(self):
+        if self.lista_mensajes is not None:
+            # Crear un nuevo menú para las opciones de mensajes
+            sub_menu_mensajes = Menu(self.filemenu2)
+
+            # Iterar sobre los mensajes y agregar opciones al submenú
+            for mensaje in self.lista_mensajes.recorrer():
+                sub_menu_mensajes.add_command(label=mensaje.dato.nombre, command=lambda msg=mensaje: self.seleccionar_mensaje(msg))
+
+            # Almacenar la referencia al submenú
+            self.sub_menu_var = sub_menu_mensajes
+
+            # Agregar el submenú al menú principal
+            self.filemenu2.add_cascade(label="i. Y ii Seleccionar(Mensaje)", menu=sub_menu_mensajes)
+            # Esta opción se ejecutará al seleccionar uno de los mensajes
+            # self.filemenu2.add_command(label="ii. Mostrar(sistema)")
+            self.filemenu2.add_command(label="iii. Grafica(Instruciones)")
+        else:
+            #print("Sistema reiniciado")
+            self.eliminarSubMenuMensajes()
+
+    def eliminarSubMenuMensajes(self):
+        if self.sub_menu_var is not None:
+            # Iterar sobre los elementos del submenú y eliminar cada uno
+            for item in self.sub_menu_var.winfo_children():
+                self.sub_menu_var.delete(item)
+
+            # Eliminar el submenú del menú principal
+            self.filemenu2.delete("i. Y ii Seleccionar(Mensaje)")
+            self.filemenu2.delete("iii. Grafica(Instruciones)")
+        else:
+            print("No hay submenú para eliminar")
+            
+
+    def seleccionar_mensaje(self, mensajenombre):
+        # Lógica para manejar la selección del mensaje (Se mostrara: Nombre, mensaje y tiempo optimo)
+        #print(f"Mensaje seleccionado: {mensajenombre.dato.nombre}")
+        # Esto es para borrar y dejar limpia el text area 
+        self.scroll.delete(1.0,tk.END)
+
+        mostrar ="---------------Opcion Seleccionada i y ii:---------------\n"
+        #self.lista_mensajes.ordenar_alfabeticamenteListaMensajes()
+        for mensaje in self.lista_mensajes.recorrer():
+            if mensajenombre.dato.nombre == mensaje.dato.nombre:
+                mostrar += "nombre: "+ mensaje.dato.nombre + "\n sistemaDrones: "+ mensaje.dato.sistemaDrones + "\n"
+                for instruc in mensaje.dato.instrucciones.recorrer():
+                    # aqui desarrollar la logica de subir, bajar, esperar y Emitir luz
+                    mostrar += "instruccion - dron: "+ instruc.dato.dron + " Instrucion: " + instruc.dato.valorInstrucion + "\n"
         
         # Muestra el texto en el area de texto
         self.scroll.insert(tk.END, mostrar)
