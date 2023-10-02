@@ -7,6 +7,8 @@ from Alturas import Alturas
 from Instruciones import Instruciones
 from Mensajes import Mensajes
 
+from Grafica import *
+
 class ConfigParser:
     def __init__(self, xml_file_path):
         self.xml_file_path = xml_file_path
@@ -104,30 +106,69 @@ if __name__ == "__main__":
     parser = ConfigParser(xml_file_path)
 
 
-    lista_drones = parser.get_lista_drones()
-    lista_drones.eliminar_duplicados()
-    lista_drones.ordenar_alfabeticamente()
-    print("--------------------------------------")
-    print("           Drones:    ")
-    for elemento in lista_drones.recorrer():
-        print(elemento.dato.nombre)
-    print("--------------------------------------\n")
+    # lista_drones = parser.get_lista_drones()
+    # lista_drones.eliminar_duplicados()
+    # lista_drones.ordenar_alfabeticamente()
+    # print("--------------------------------------")
+    # print("           Drones:    ")
+    # for elemento in lista_drones.recorrer():
+    #     print(elemento.dato.nombre)
+    # print("--------------------------------------\n")
     
-
+    # Esto fue una prueba para generar la grafica de sistemas de drones
     lista_sistemas_drones = parser.get_lista_sistemas_drones()
-    print("     Lista de Sistemas de Drones:  ")
-    for sistema in lista_sistemas_drones.recorrer():
-        print("nombre: ",sistema.dato.nombre,
-              "\naltura_maxima :",sistema.dato.alturaMaxima,
-              "\ncantidad_drones: ",sistema.dato.cantidadDrones
-              )
-        for contenido in sistema.dato.contenido.recorrer():
-            print("dron: ", contenido.dato.dron)
-            for altura in contenido.dato.alturas.recorrer():
-                print("altura - valor= ", altura.dato.valor, " Letra: ", altura.dato.letra)
-    print("--------------------------------------\n")
+    # print("     Lista de Sistemas de Drones:  ")
+    # for sistema in lista_sistemas_drones.recorrer():
+        
+    #     # Se agrega la raiz del Arbol
+    #     raiz = arbol.agregarNodo(f"Sistema: \\n{str(sistema.dato.nombre)}")
+    #     nodoA =  arbol.agregarNodo("Altura (mts)")
+    #     arbol.agregarArista(raiz, nodoA)
+    #     print("nombre: ",sistema.dato.nombre,
+    #           "\naltura_maxima :",sistema.dato.alturaMaxima,
+    #           "\ncantidad_drones: ",sistema.dato.cantidadDrones
+    #           )
+    #     #arbol.setUltimoNodo()
+    #     aux = 0
+    #     for contenido in sistema.dato.contenido.recorrer():
+    #         nodoB = arbol.agregarNodo(contenido.dato.dron)
+    #         arbol.agregarArista(raiz, nodoB)
+    #         print("dron: ", contenido.dato.dron)
+
+            
+    #         for altura in contenido.dato.alturas.recorrer():
+    #             if aux == 0:
+    #                 nodoD = arbol.agregarNodo(altura.dato.letra)
+    #                 arbol.agregarArista(nodoB, nodoD)
+    #                 aux +=1
+    #             else:
+    #                 nodoE = arbol.obtenerUltimoNodo()
+    #                 nodoF = arbol.agregarNodo(altura.dato.letra)
+    #                 arbol.agregarArista(nodoE, nodoF)
+                    
+    #             print("altura - valor= ", altura.dato.valor, " Letra: ", altura.dato.letra)
+
+    #         if aux == 1:
+    #             for altura in contenido.dato.alturas.recorrer():
+    #                 if aux == 1:
+    #                     nodoC = arbol.agregarNodo(altura.dato.valor)
+    #                     arbol.agregarArista(nodoA, nodoC)
+    #                     aux +=1
+    #                 elif int(altura.dato.valor) > 1:
+    #                     nodoA = arbol.obtenerUltimoNodo()
+    #                     nodoH = arbol.agregarNodo(altura.dato.valor)
+    #                     arbol.agregarArista(nodoA, nodoH)
+    #                 else:
+    #                     nodoA = arbol.obtenerUltimoNodo()
+    #                     nodoH = arbol.agregarNodo(altura.dato.valor)
+    #                     arbol.agregarArista(nodoA, nodoH)
+    #                     break             
+    # arbol.generarGrafica()
+    # print("--------------------------------------\n")
    
+
     lista_mensajes = parser.get_lista_mensajes()
+    lista_mensajes.ordenar_alfabeticamenteListaMensajes()
     print("     Lista de Mensajes:  ")
     for mensaje in lista_mensajes.recorrer():
         print("nombre: ",mensaje.dato.nombre,
@@ -135,10 +176,3 @@ if __name__ == "__main__":
         for instruc in mensaje.dato.instrucciones.recorrer():
             print("instruccion - dron: ", instruc.dato.dron," Instrucion: ",instruc.dato.valorInstrucion)
 
-    lista_drones.borrar_todos()
-    #lista_drones = parser.get_lista_drones() # Este se tine que quitar
-    print("--------------------------------------")
-    print("           Drones:    ")
-    for elemento in lista_drones.recorrer():
-        print(elemento.dato.nombre)
-    print("--------------------------------------\n")

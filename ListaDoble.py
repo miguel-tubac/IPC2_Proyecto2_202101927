@@ -37,6 +37,21 @@ class ListaDoble:
                     actual.dato, siguiente.dato = siguiente.dato, actual.dato
                     ordenado = False
                 actual = siguiente
+    
+    def ordenar_alfabeticamenteListaMensajes(self):
+        if self.primero is None:
+            return
+
+        ordenado = False
+        while not ordenado:
+            ordenado = True
+            actual = self.primero
+            while actual.siguiente is not None:
+                siguiente = actual.siguiente
+                if ord(actual.dato.nombre[0]) > ord(siguiente.dato.nombre[0]):
+                    actual.dato, siguiente.dato = siguiente.dato, actual.dato
+                    ordenado = False
+                actual = siguiente
 
     def eliminar_duplicados(self):
         if self.primero is None:
