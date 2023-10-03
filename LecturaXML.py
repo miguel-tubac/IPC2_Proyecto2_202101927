@@ -61,10 +61,12 @@ class ConfigParser:
                         ingresoAlturas = Alturas(alturas, letras)
                         # Almaceno la instancia en la listadoble de datosAltura
                         datosAltura.insertar(ingresoAlturas)
+                    datosAltura.invertir()
                     # Creo una instancia de la clase Contenido y en la misma meto una listadoble datosAltura    
                     datoDeDron = Contenido(dron, datosAltura)
                     # La ingreso a la listadoble contenido
                     contenido.insertar(datoDeDron)
+                contenido.invertir()
                 # Creo una instancia de la clase SistemaDrones, en donde almaceno una listadoble contenido
                 datoDeSistemaDron = SistemaDrones(nombre, altura_maxima, cantidad_drones, contenido)
                 # Inserto la instancia en la lista doble sistemas_drones
@@ -93,6 +95,8 @@ class ConfigParser:
                 instrucionesDeclaracion = Instruciones(dron, valor)
                 # Se ingresa la clase a la lista doblemente enlazada 
                 instrucciones.insertar(instrucionesDeclaracion)
+            # Con esto invierto el orden de las instruciones para que no sea correcto:
+            instrucciones.invertir()
             # Instancia de la clase Mensaje que se le psan los parametros
             instanciaMensaje = Mensajes(nombre, sistema_drones, instrucciones)
             # Se almacena la informacion en la istadoble
@@ -170,9 +174,56 @@ if __name__ == "__main__":
     lista_mensajes = parser.get_lista_mensajes()
     lista_mensajes.ordenar_alfabeticamenteListaMensajes()
     print("     Lista de Mensajes:  ")
-    for mensaje in lista_mensajes.recorrer():
-        print("nombre: ",mensaje.dato.nombre,
-              "\nsistemaDrones: ", mensaje.dato.sistemaDrones)
-        for instruc in mensaje.dato.instrucciones.recorrer():
-            print("instruccion - dron: ", instruc.dato.dron," Instrucion: ",instruc.dato.valorInstrucion)
+    drones_movilizados = ListaDoble()
 
+    for mensaje in lista_mensajes.recorrer():
+        print("  nombre: ", mensaje.dato.nombre,
+            "\n  sistemaDrones: ", mensaje.dato.sistemaDrones)
+
+        for instruc in mensaje.dato.instrucciones.recorrer():
+            # Se obtiene el valor actual:
+            valor_instruccion = int(instruc.dato.valorInstrucion)
+
+            if instruc.anterior is not None:
+                # Se obtiene el valor anterior al actual
+                valor_instruccionAnterior = int(instruc.anterior.dato.valorInstrucion)
+                #print("valor_instruccionAnterior: ", valor_instruccionAnterior)
+
+                # Verificar si el dron ya ha sido movilizado
+                movilizado = False
+                actual = drones_movilizados.primero
+                while actual is not None:
+                    if actual.dato == instruc.dato.dron:
+                        movilizado = True
+                        break
+                    actual = actual.siguiente
+
+                if movilizado:
+                    if valor_instruccion > valor_instruccionAnterior:
+                        for _ in range(valor_instruccion):
+                            print(instruc.dato.dron, ": Subir")
+                        print(instruc.dato.dron, ": Emitir luz")
+                    elif valor_instruccion == valor_instruccionAnterior:
+                        print(instruc.dato.dron, ": Esperar")
+                    elif valor_instruccion < valor_instruccionAnterior:
+                        for _ in range(valor_instruccion):
+                            print(instruc.dato.dron, ": Bajar")
+                        print(instruc.dato.dron, ": Emitir luz")
+
+                else:
+                    # Para el primer caso, simplemente sube según el valor de la instrucción
+                    for _ in range(valor_instruccion):
+                        print(instruc.dato.dron, ": Subir")
+                    print(instruc.dato.dron, ": Emitir luz")
+
+                    # Registrar el dron como movilizado
+                    drones_movilizados.insertar(instruc.dato.dron)
+
+            else:
+                # Para el primer caso, simplemente sube según el valor de la instrucción
+                for _ in range(valor_instruccion):
+                    print(instruc.dato.dron, ": Subir")
+                print(instruc.dato.dron, ": Emitir luz")
+
+                # Registrar el dron como movilizado
+                drones_movilizados.insertar(instruc.dato.dron)

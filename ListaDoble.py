@@ -83,5 +83,24 @@ class ListaDoble:
             # Avanzar al siguiente nodo solo si no hubo duplicados
             if not duplicado:
                 actual = actual.siguiente
-        
+    
+    def invertir(self):
+        if self.primero is None or self.primero.siguiente is None:
+            # No hay elementos o solo hay un elemento, no hay nada que invertir
+            return
+
+        actual = self.primero
+        anterior = None
+
+        while actual.siguiente:
+            siguiente = actual.siguiente
+            actual.siguiente = anterior
+            actual.anterior = siguiente
+            anterior = actual
+            actual = siguiente
+
+        actual.siguiente = anterior
+        actual.anterior = None
+
+        self.primero = actual
 

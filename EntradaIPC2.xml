@@ -79,7 +79,7 @@
       </sistemaDrones>
    </listaSistemasDrones>
    <listaMensajes>
-      <Mensaje nombre="Asg">
+      <Mensaje nombre="msg">
          <sistemaDrones>SD1</sistemaDrones>
          <instrucciones>
             <instruccion dron="DronX">2</instruccion>
@@ -88,7 +88,7 @@
             <instruccion dron="DronY">1</instruccion>
          </instrucciones>
       </Mensaje>
-      <Mensaje nombre="Msg2">
+      <Mensaje nombre="msg2">
          <sistemaDrones>SDF</sistemaDrones>
          <instrucciones>
             <instruccion dron="DronW">1</instruccion>
