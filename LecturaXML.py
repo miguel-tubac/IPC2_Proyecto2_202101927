@@ -171,59 +171,72 @@ if __name__ == "__main__":
     # print("--------------------------------------\n")
    
 
+
     lista_mensajes = parser.get_lista_mensajes()
     lista_mensajes.ordenar_alfabeticamenteListaMensajes()
-    print("     Lista de Mensajes:  ")
+    print("----Lista de Mensajes:----")
+    # Se almacenan los drones movilizados
     drones_movilizados = ListaDoble()
-
+    # Se recorren los sistemas de drones:
     for mensaje in lista_mensajes.recorrer():
+        # Para unir la palabra del mensaje
+        palabra = ""
         print("  nombre: ", mensaje.dato.nombre,
             "\n  sistemaDrones: ", mensaje.dato.sistemaDrones)
-
+        
+        # Se obtiene la palabra del mensaje
         for instruc in mensaje.dato.instrucciones.recorrer():
-            # Se obtiene el valor actual:
-            valor_instruccion = int(instruc.dato.valorInstrucion)
+            # Valor del primer dron
+            valor_instruccionAnterior = int(instruc.dato.valorInstrucion)
 
-            if instruc.anterior is not None:
-                # Se obtiene el valor anterior al actual
-                valor_instruccionAnterior = int(instruc.anterior.dato.valorInstrucion)
-                #print("valor_instruccionAnterior: ", valor_instruccionAnterior)
+            for sistema in lista_sistemas_drones.recorrer():
+                #print(sistema.dato.nombre)               
+                for contenido in sistema.dato.contenido.recorrer():
+                    for altura in contenido.dato.alturas.recorrer():
+                       if (mensaje.dato.sistemaDrones==sistema.dato.nombre) and (valor_instruccionAnterior == int(altura.dato.valor)) and (instruc.dato.dron==contenido.dato.dron):
+                           #print(valor_instruccionAnterior, " == ",int(altura.dato.valor), " and ", instruc.dato.dron," == ",contenido.dato.dron)
+                           palabra += str(altura.dato.letra)
+        print("  Mensaje: ",palabra)
 
-                # Verificar si el dron ya ha sido movilizado
-                movilizado = False
-                actual = drones_movilizados.primero
+        # Se inicializa cada sistema de drones movilizados
+        drones_movilizados.borrar_todos()
+        # Se recorren las listas de drones:
+        for instruc in mensaje.dato.instrucciones.recorrer():
+            # Valor del primer dron
+            valor_instruccionAnterior = int(instruc.dato.valorInstrucion)
+
+            # Verificar si el dron ya ha sido movilizado
+            movilizado = False
+            for comprovacion in drones_movilizados.recorrer():
+                actual = comprovacion
                 while actual is not None:
-                    if actual.dato == instruc.dato.dron:
+                    if actual.dato.dron == instruc.dato.dron:
+                        # Valor del dron repetido:
+                        valor_instruccionRepetido = int(actual.dato.valorInstrucion)
+                        #print("valor_instruccionRepetido: ",valor_instruccionRepetido," valor_instruccionAnterior: ",valor_instruccionAnterior)
+                        if valor_instruccionAnterior > valor_instruccionRepetido:
+                            for _ in range(valor_instruccionAnterior - valor_instruccionRepetido):
+                                print(actual.dato.dron, ": Subir")
+                            print(actual.dato.dron, ": Emitir luz")
+                        elif valor_instruccionAnterior == valor_instruccionRepetido:
+                            print(actual.dato.dron, ": Esperar")
+                        elif valor_instruccionAnterior < valor_instruccionRepetido:
+                            for _ in range(valor_instruccionRepetido - valor_instruccionAnterior):
+                                print(actual.dato.dron, ": Bajar")
+                            print(actual.dato.dron, ": Emitir luz")
                         movilizado = True
                         break
                     actual = actual.siguiente
-
                 if movilizado:
-                    if valor_instruccion > valor_instruccionAnterior:
-                        for _ in range(valor_instruccion):
-                            print(instruc.dato.dron, ": Subir")
-                        print(instruc.dato.dron, ": Emitir luz")
-                    elif valor_instruccion == valor_instruccionAnterior:
-                        print(instruc.dato.dron, ": Esperar")
-                    elif valor_instruccion < valor_instruccionAnterior:
-                        for _ in range(valor_instruccion):
-                            print(instruc.dato.dron, ": Bajar")
-                        print(instruc.dato.dron, ": Emitir luz")
-
-                else:
-                    # Para el primer caso, simplemente sube según el valor de la instrucción
-                    for _ in range(valor_instruccion):
-                        print(instruc.dato.dron, ": Subir")
-                    print(instruc.dato.dron, ": Emitir luz")
-
-                    # Registrar el dron como movilizado
-                    drones_movilizados.insertar(instruc.dato.dron)
-
-            else:
-                # Para el primer caso, simplemente sube según el valor de la instrucción
-                for _ in range(valor_instruccion):
+                    break
+            # Cuando no existe ningun registro del movimiento anterior del dron:
+            if movilizado is False:
+                #Para el primer caso, simplemente sube según el valor de la instrucción
+                for _ in range(valor_instruccionAnterior):
                     print(instruc.dato.dron, ": Subir")
                 print(instruc.dato.dron, ": Emitir luz")
 
-                # Registrar el dron como movilizado
-                drones_movilizados.insertar(instruc.dato.dron)
+            # Instancia de la clase Instruciones
+            instrucionesIngresadosConFormato = Instruciones(instruc.dato.dron, instruc.dato.valorInstrucion)
+            #Registrar el dron como movilizado
+            drones_movilizados.insertar(instrucionesIngresadosConFormato)

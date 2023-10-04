@@ -29,6 +29,10 @@ class Arbol:
         self.dot.render("Graficas/ListadoDeSistema", view=True)
         #self.dot.save("Graficas/Arbol.dot")
 
+    def generarGrafica2(self):
+        self.dot.render("Graficas/ListadoDeInstruciones", view=True)
+        #self.dot.save("Graficas/Arbol.dot")
+
     def obtenerUltimoNodo(self):
         return f"nodo{self.counter - 1}"
     

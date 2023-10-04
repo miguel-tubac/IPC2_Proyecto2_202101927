@@ -1,0 +1,64 @@
+// Graph 20231004-154457
+digraph {
+	node [fillcolor=aliceblue fontcolor=black shape=ellipse style=filled]
+	nodo0 [label="Sistema: \nSDF"]
+	nodo1 [label="Mensaje: \nIPC2"]
+	nodo0 -> nodo1
+	nodo2 [label="Tiempo Optimo: "]
+	nodo1 -> nodo2
+	nodo3 [label=DronW]
+	nodo1 -> nodo3
+	nodo4 [label=Subir]
+	nodo3 -> nodo4
+	nodo5 [label="Emitir luz"]
+	nodo4 -> nodo5
+	nodo6 [label=DronX]
+	nodo1 -> nodo6
+	nodo7 [label=Subir]
+	nodo6 -> nodo7
+	nodo8 [label="Emitir luz"]
+	nodo7 -> nodo8
+	nodo9 [label=DronY]
+	nodo1 -> nodo9
+	nodo10 [label=Subir]
+	nodo9 -> nodo10
+	nodo11 [label="Emitir luz"]
+	nodo10 -> nodo11
+	nodo12 [label=DronZ]
+	nodo1 -> nodo12
+	nodo13 [label=Subir]
+	nodo12 -> nodo13
+	nodo14 [label="Emitir luz"]
+	nodo13 -> nodo14
+	nodo15 [label="Sistema: \nSD1"]
+	nodo16 [label="Mensaje: \nIPC2"]
+	nodo15 -> nodo16
+	nodo17 [label="Tiempo Optimo: "]
+	nodo16 -> nodo17
+	nodo18 [label=DronX]
+	nodo16 -> nodo18
+	nodo19 [label=Subir]
+	nodo18 -> nodo19
+	nodo20 [label=Subir]
+	nodo19 -> nodo20
+	nodo21 [label="Emitir luz"]
+	nodo20 -> nodo21
+	nodo22 [label=DronY]
+	nodo16 -> nodo22
+	nodo23 [label=Subir]
+	nodo22 -> nodo23
+	nodo24 [label=Subir]
+	nodo23 -> nodo24
+	nodo25 [label=Subir]
+	nodo24 -> nodo25
+	nodo26 [label="Emitir luz"]
+	nodo25 -> nodo26
+	nodo27 [label=DronZ]
+	nodo16 -> nodo27
+	nodo28 [label=Subir]
+	nodo27 -> nodo28
+	nodo29 [label=Subir]
+	nodo28 -> nodo29
+	nodo30 [label="Emitir luz"]
+	nodo29 -> nodo30
+}

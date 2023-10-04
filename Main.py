@@ -13,6 +13,7 @@ from LecturaXML import ConfigParser
 from ListaDoble import ListaDoble
 from Drones import Drones
 from Grafica import*
+from Instruciones import Instruciones
 
 class ScrollText(tk.Frame):
     def __init__(self, master, *args, **kwargs):
@@ -340,7 +341,7 @@ class Ventana(tk.Tk):
             self.filemenu2.add_cascade(label="i. Y ii Seleccionar(Mensaje)", menu=sub_menu_mensajes)
             # Esta opción se ejecutará al seleccionar uno de los mensajes
             # self.filemenu2.add_command(label="ii. Mostrar(sistema)")
-            self.filemenu2.add_command(label="iii. Grafica(Instruciones)")
+            self.filemenu2.add_command(label="iii. Grafica(Instruciones)", command= self.generarGraficaListadoInstruciones)
         else:
             #print("Sistema reiniciado")
             self.eliminarSubMenuMensajes()
@@ -360,21 +361,170 @@ class Ventana(tk.Tk):
 
     def seleccionar_mensaje(self, mensajenombre):
         # Lógica para manejar la selección del mensaje (Se mostrara: Nombre, mensaje y tiempo optimo)
-        #print(f"Mensaje seleccionado: {mensajenombre.dato.nombre}")
         # Esto es para borrar y dejar limpia el text area 
         self.scroll.delete(1.0,tk.END)
 
         mostrar ="---------------Opcion Seleccionada i y ii:---------------\n"
-        #self.lista_mensajes.ordenar_alfabeticamenteListaMensajes()
+        # Se almacenan los drones movilizados
+        drones_movilizados = ListaDoble()
         for mensaje in self.lista_mensajes.recorrer():
             if mensajenombre.dato.nombre == mensaje.dato.nombre:
-                mostrar += "nombre: "+ mensaje.dato.nombre + "\n sistemaDrones: "+ mensaje.dato.sistemaDrones + "\n"
+                # Muestra los datos del sistema a utilizar:
+                mostrar += "nombre: "+ mensaje.dato.nombre + "\nsistemaDrones: "+ mensaje.dato.sistemaDrones + "\n"
+
+                # Para unir la palabra del mensaje
+                palabra = ""
+                
+                # Se obtiene la palabra del mensaje
                 for instruc in mensaje.dato.instrucciones.recorrer():
-                    # aqui desarrollar la logica de subir, bajar, esperar y Emitir luz
-                    mostrar += "instruccion - dron: "+ instruc.dato.dron + " Instrucion: " + instruc.dato.valorInstrucion + "\n"
+                    # Valor del primer dron
+                    valor_instruccionAnterior = int(instruc.dato.valorInstrucion)
+
+                    for sistema in self.lista_sistemas_drones.recorrer():              
+                        for contenido in sistema.dato.contenido.recorrer():
+                            for altura in contenido.dato.alturas.recorrer():
+                                if (mensaje.dato.sistemaDrones==sistema.dato.nombre) and (valor_instruccionAnterior == int(altura.dato.valor)) and (instruc.dato.dron==contenido.dato.dron):
+                                    #print(valor_instruccionAnterior, " == ",int(altura.dato.valor), " and ", instruc.dato.dron," == ",contenido.dato.dron)
+                                    palabra += str(altura.dato.letra)
+                mostrar += "Mensaje: "+ palabra + "\n"+ "\n"
+
+                # Se inicializa cada sistema de drones movilizados
+                drones_movilizados.borrar_todos()
+                # Se recorren las listas de drones:
+                for instruc in mensaje.dato.instrucciones.recorrer():
+                    # Valor del primer dron
+                    valor_instruccionAnterior = int(instruc.dato.valorInstrucion)
+
+                    # Verificar si el dron ya ha sido movilizado
+                    movilizado = False
+                    for comprovacion in drones_movilizados.recorrer():
+                        actual = comprovacion
+                        while actual is not None:
+                            if actual.dato.dron == instruc.dato.dron:
+                                # Valor del dron repetido:
+                                valor_instruccionRepetido = int(actual.dato.valorInstrucion)
+                                #print("valor_instruccionRepetido: ",valor_instruccionRepetido," valor_instruccionAnterior: ",valor_instruccionAnterior)
+                                if valor_instruccionAnterior > valor_instruccionRepetido:
+                                    for _ in range(valor_instruccionAnterior - valor_instruccionRepetido):
+                                        mostrar += actual.dato.dron + ": Subir"+ "\n"
+                                    mostrar += actual.dato.dron + ": Emitir luz"+ "\n"
+                                elif valor_instruccionAnterior == valor_instruccionRepetido:
+                                    mostrar += actual.dato.dron + ": Esperar"+ "\n"
+                                elif valor_instruccionAnterior < valor_instruccionRepetido:
+                                    for _ in range(valor_instruccionRepetido - valor_instruccionAnterior):
+                                        mostrar += actual.dato.dron + ": Bajar"+ "\n"
+                                    mostrar += actual.dato.dron + ": Emitir luz"+ "\n"
+                                movilizado = True
+                                break
+                            actual = actual.siguiente
+                        if movilizado:
+                            break
+                    # Cuando no existe ningun registro del movimiento anterior del dron:
+                    if movilizado is False:
+                        #Para el primer caso, simplemente sube según el valor de la instrucción
+                        for _ in range(valor_instruccionAnterior):
+                            mostrar += instruc.dato.dron + ": Subir"+ "\n"
+                        mostrar += instruc.dato.dron + ": Emitir luz"+ "\n"
+
+                    # Instancia de la clase Instruciones
+                    instrucionesIngresadosConFormato = Instruciones(instruc.dato.dron, instruc.dato.valorInstrucion)
+                    #Registrar el dron como movilizado
+                    drones_movilizados.insertar(instrucionesIngresadosConFormato)
         
         # Muestra el texto en el area de texto
         self.scroll.insert(tk.END, mostrar)
+    
+
+    def generarGraficaListadoInstruciones(self):
+        # Se almacenan los drones movilizados
+        drones_movilizados = ListaDoble()
+        for mensaje in self.lista_mensajes.recorrer():
+
+            # Para unir la palabra del mensaje
+            palabra = ""
+            # Se obtiene la palabra del mensaje
+            for instruc in mensaje.dato.instrucciones.recorrer():
+                # Valor del primer dron
+                valor_instruccionAnterior = int(instruc.dato.valorInstrucion)
+
+                for sistema in self.lista_sistemas_drones.recorrer():              
+                    for contenido in sistema.dato.contenido.recorrer():
+                        for altura in contenido.dato.alturas.recorrer():
+                            if (mensaje.dato.sistemaDrones==sistema.dato.nombre) and (valor_instruccionAnterior == int(altura.dato.valor)) and (instruc.dato.dron==contenido.dato.dron):
+                                palabra += str(altura.dato.letra)
+
+            # Se agrega la raiz del Arbol
+            raiz = arbol.agregarNodo(f"Sistema: \\n{str(mensaje.dato.sistemaDrones)}")
+            # Se agrega un nodo
+            nodoA =  arbol.agregarNodo(f"Mensaje: \\n{str(palabra)}")
+            # Se agrega a la grafica
+            arbol.agregarArista(raiz, nodoA)
+
+            nodoTiempo = arbol.agregarNodo("Tiempo Optimo: ")
+            arbol.agregarArista(nodoA,nodoTiempo)
+
+            # Se inicializa cada sistema de drones movilizados
+            drones_movilizados.borrar_todos()
+            # Se recorren las listas de drones:
+            for instruc in mensaje.dato.instrucciones.recorrer():
+
+                # Valor del primer dron
+                valor_instruccionAnterior = int(instruc.dato.valorInstrucion)
+
+                # Verificar si el dron ya ha sido movilizado
+                movilizado = False
+                for comprovacion in drones_movilizados.recorrer():
+                    actual = comprovacion
+                    while actual is not None:
+                        if actual.dato.dron == instruc.dato.dron:
+                            # Valor del dron repetido:
+                            valor_instruccionRepetido = int(actual.dato.valorInstrucion)
+                            # Valida los movimientos:
+                            if valor_instruccionAnterior > valor_instruccionRepetido:
+                                for _ in range(valor_instruccionAnterior - valor_instruccionRepetido):
+                                    #Se agregan los drones
+                                    #nodoB = arbol.agregarNodo(contenido.dato.dron)
+                                    #arbol.agregarArista(raiz, nodoB)
+                                    print(actual.dato.dron, ": Subir")
+                                print(actual.dato.dron, ": Emitir luz")
+                            elif valor_instruccionAnterior == valor_instruccionRepetido:
+                                print(actual.dato.dron, ": Esperar")
+                            elif valor_instruccionAnterior < valor_instruccionRepetido:
+                                for _ in range(valor_instruccionRepetido - valor_instruccionAnterior):
+                                    print(actual.dato.dron, ": Bajar")
+                                print( actual.dato.dron, ": Emitir luz")
+                            movilizado = True
+                            break
+                        actual = actual.siguiente
+                    if movilizado:
+                        break
+                # Cuando no existe ningun registro del movimiento anterior del dron:
+                if movilizado is False:
+                    # Se agregan los drones
+                    nodoDron = arbol.agregarNodo(instruc.dato.dron)
+                    # Se agrega a la grafica
+                    arbol.agregarArista(nodoA,nodoDron)
+
+                    #Para el primer caso, simplemente sube según el valor de la instrucción
+                    for _ in range(valor_instruccionAnterior):
+                        nodo1 = arbol.obtenerUltimoNodo()
+                        nodo2 = arbol.agregarNodo("Subir")
+                        arbol.agregarArista(nodo1, nodo2)
+                    nodo3 = arbol.obtenerUltimoNodo()
+                    nodo4 = arbol.agregarNodo("Emitir luz")
+                    arbol.agregarArista(nodo3, nodo4)
+
+                # Instancia de la clase Instruciones
+                instrucionesIngresadosConFormato = Instruciones(instruc.dato.dron, instruc.dato.valorInstrucion)
+                #Registrar el dron como movilizado
+                drones_movilizados.insertar(instrucionesIngresadosConFormato)
+        
+        # Aca se geenra la grafica 
+        arbol.generarGrafica2()
+
+
+
+        pass
 
     # def insertarPDF(self):
     #     file_path = "Graficas/ListadoDeSistema.pdf"
