@@ -226,6 +226,8 @@ if __name__ == "__main__":
                             print(actual.dato.dron, ": Emitir luz")
                         movilizado = True
                         break
+                    else:
+                        print(actual.dato.dron, ": Esperar")
                     actual = actual.siguiente
                 if movilizado:
                     break

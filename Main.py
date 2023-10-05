@@ -3,6 +3,8 @@ from tkinter import *
 from tkinter import messagebox
 from tkinter import simpledialog
 from tkinter.filedialog import askopenfilename, asksaveasfilename
+import webbrowser
+import os
 
 # Para poder insertar el pdf a la ventana
 # Para trabajar con el pdf
@@ -91,7 +93,7 @@ class Ventana(tk.Tk):
         # self.filemenu2.add_command(label="ii. Mostrar(sistema)")
         # self.filemenu2.add_command(label="iii. Grafica(Instruciones)")
 
-        self.menu.add_command(label="g. Ayuda")
+        self.menu.add_command(label="g. Ayuda", command=self.ayuda)
 
         # # Crear barras de desplazamiento
         # self.scrollbar_x = Scrollbar(self, orient=tk.HORIZONTAL)
@@ -495,6 +497,11 @@ class Ventana(tk.Tk):
                                 print( actual.dato.dron, ": Emitir luz")
                             movilizado = True
                             break
+                        # else:
+                        #     aqui
+                        #     nodo5 = arbol.obtenerUltimoNodo()
+                        #     nodo6 = arbol.agregarNodo("Esperar")
+                        #     arbol.agregarArista(nodo5, nodo6)
                         actual = actual.siguiente
                     if movilizado:
                         break
@@ -525,6 +532,40 @@ class Ventana(tk.Tk):
 
 
         pass
+
+
+    def abrir_documento(self):
+        ruta_absoluta = os.path.abspath("Documentacion/EnsayoProyecto2.pdf")
+        os.startfile('"' + ruta_absoluta + '"')
+
+    def ayuda(self):
+        ventana_emergente = tk.Toplevel()
+
+        mensaje = """
+        > Nombre: Miguel Adrian Tubac Agustin
+        > Carnet: 202101927
+        > Curso: Introduccion a la Programacion y Computacion 2 seccion "N"
+        > Carrera: Ingenieria en Ciancias y Sistemas
+        > Semestre: 6to. Semestre
+        
+        Haz clic en el botón para obtener más información."""
+
+        label_mensaje = tk.Label(ventana_emergente, text=mensaje)
+        label_mensaje.pack(padx=10, pady=10)
+
+        # Agregar un botón para abrir el documento
+        boton_abrir_documento = tk.Button(ventana_emergente, text="Abrir Documento", command=self.abrir_documento)
+        boton_abrir_documento.pack(pady=10)
+
+        ventana_emergente.grab_set()
+        ventana_emergente.wait_window(ventana_emergente)
+
+        # """
+        #   > Nombre: Miguel Adrian Tubac Agustin
+        #   > Carnet: 202101927
+        #   > Curso: Introduccion a la Programacion y Computacion 2 seccion "N"
+        #   > Carrera: Ingenieria en Ciancias y Sistemas
+        #   > Semestre: 6to. Semestre """
 
     # def insertarPDF(self):
     #     file_path = "Graficas/ListadoDeSistema.pdf"

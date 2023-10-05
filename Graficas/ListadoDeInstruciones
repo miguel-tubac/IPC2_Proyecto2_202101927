@@ -1,4 +1,4 @@
-// Graph 20231004-154457
+// Graph 20231004-173357
 digraph {
 	node [fillcolor=aliceblue fontcolor=black shape=ellipse style=filled]
 	nodo0 [label="Sistema: \nSDF"]
@@ -12,53 +12,83 @@ digraph {
 	nodo3 -> nodo4
 	nodo5 [label="Emitir luz"]
 	nodo4 -> nodo5
-	nodo6 [label=DronX]
-	nodo1 -> nodo6
-	nodo7 [label=Subir]
-	nodo6 -> nodo7
-	nodo8 [label="Emitir luz"]
+	nodo6 [label=Esperar]
+	nodo5 -> nodo6
+	nodo7 [label=DronX]
+	nodo1 -> nodo7
+	nodo8 [label=Subir]
 	nodo7 -> nodo8
-	nodo9 [label=DronY]
-	nodo1 -> nodo9
-	nodo10 [label=Subir]
+	nodo9 [label="Emitir luz"]
+	nodo8 -> nodo9
+	nodo10 [label=Esperar]
 	nodo9 -> nodo10
-	nodo11 [label="Emitir luz"]
+	nodo11 [label=Esperar]
 	nodo10 -> nodo11
-	nodo12 [label=DronZ]
-	nodo1 -> nodo12
-	nodo13 [label=Subir]
-	nodo12 -> nodo13
-	nodo14 [label="Emitir luz"]
+	nodo12 [label=Esperar]
+	nodo11 -> nodo12
+	nodo13 [label=DronY]
+	nodo1 -> nodo13
+	nodo14 [label=Subir]
 	nodo13 -> nodo14
-	nodo15 [label="Sistema: \nSD1"]
-	nodo16 [label="Mensaje: \nIPC2"]
+	nodo15 [label="Emitir luz"]
+	nodo14 -> nodo15
+	nodo16 [label=Esperar]
 	nodo15 -> nodo16
-	nodo17 [label="Tiempo Optimo: "]
+	nodo17 [label=Esperar]
 	nodo16 -> nodo17
-	nodo18 [label=DronX]
-	nodo16 -> nodo18
-	nodo19 [label=Subir]
+	nodo18 [label=Esperar]
+	nodo17 -> nodo18
+	nodo19 [label=Esperar]
 	nodo18 -> nodo19
-	nodo20 [label=Subir]
+	nodo20 [label=Esperar]
 	nodo19 -> nodo20
-	nodo21 [label="Emitir luz"]
+	nodo21 [label=Esperar]
 	nodo20 -> nodo21
-	nodo22 [label=DronY]
-	nodo16 -> nodo22
+	nodo22 [label=DronZ]
+	nodo1 -> nodo22
 	nodo23 [label=Subir]
 	nodo22 -> nodo23
-	nodo24 [label=Subir]
+	nodo24 [label="Emitir luz"]
 	nodo23 -> nodo24
-	nodo25 [label=Subir]
-	nodo24 -> nodo25
-	nodo26 [label="Emitir luz"]
+	nodo25 [label="Sistema: \nSD1"]
+	nodo26 [label="Mensaje: \nIPC2"]
 	nodo25 -> nodo26
-	nodo27 [label=DronZ]
-	nodo16 -> nodo27
-	nodo28 [label=Subir]
-	nodo27 -> nodo28
+	nodo27 [label="Tiempo Optimo: "]
+	nodo26 -> nodo27
+	nodo28 [label=DronX]
+	nodo26 -> nodo28
 	nodo29 [label=Subir]
 	nodo28 -> nodo29
-	nodo30 [label="Emitir luz"]
+	nodo30 [label=Subir]
 	nodo29 -> nodo30
+	nodo31 [label="Emitir luz"]
+	nodo30 -> nodo31
+	nodo32 [label=Esperar]
+	nodo31 -> nodo32
+	nodo33 [label=DronY]
+	nodo26 -> nodo33
+	nodo34 [label=Subir]
+	nodo33 -> nodo34
+	nodo35 [label=Subir]
+	nodo34 -> nodo35
+	nodo36 [label=Subir]
+	nodo35 -> nodo36
+	nodo37 [label="Emitir luz"]
+	nodo36 -> nodo37
+	nodo38 [label=Esperar]
+	nodo37 -> nodo38
+	nodo39 [label=Esperar]
+	nodo38 -> nodo39
+	nodo40 [label=Esperar]
+	nodo39 -> nodo40
+	nodo41 [label=DronZ]
+	nodo26 -> nodo41
+	nodo42 [label=Subir]
+	nodo41 -> nodo42
+	nodo43 [label=Subir]
+	nodo42 -> nodo43
+	nodo44 [label="Emitir luz"]
+	nodo43 -> nodo44
+	nodo45 [label=Esperar]
+	nodo44 -> nodo45
 }

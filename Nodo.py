@@ -1,4 +1,3 @@
-
 class Nodo:
     def __init__(self, datos=None, siguiente=None, anterior=None):
         self.dato = datos
